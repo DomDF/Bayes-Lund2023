@@ -1,0 +1,334 @@
+---
+title: "Identifying Data Requirements using Bayesian Decision Analysis"
+subtitle: "Bayes@Lund Conference"
+execute: 
+  echo: true
+  message: false
+  warning: false
+format: 
+  revealjs:
+    progress: true
+    chalkboard: false
+    preview-links: true
+    theme: [simple, custom.scss]
+    # logo: figures/ATI_logo.png
+    smaller: true
+    scrollable: true
+    transition: slide
+    # institute: "<br>The Alan Turing Institute"
+    author: "Domenic Di Francesco, PhD, CEng (MIMechE)"
+    code-fold: true
+    date: "January 2023"
+---
+
+## Uncertainty and Decisions
+
+```{r}
+#| echo: false
+library(tidyverse); setwd("~/Github/Bayes-Lund2023/Bayes-Lund2023_presentation")
+```
+
+## Uncertainty and Decisions
+
+::: panel-tabset
+### Decision-event trees
+
+![Example decision tree](Figures/decision_tree.png)
+
+### Influence diagrams
+
+![Example influence diagram](Figures/influence_diagram.png)
+:::
+
+## Uncertainty and Decisions
+
+<!-- ::: {.incremental} -->
+
+<!-- ::: -->
+
+*"Bayesian analysis and decision theory go rather naturally together, partly because of their common goal of utilizing non-experimental sources of information, and partly because of deep theoretical ties."* <br> <br> Prof. James Berger, [Statistical Decision Theory and Bayesian Analysis](https://doi.org/10.1007/978-1-4757-4286-2).
+
+*"It is important that all problems of inference be visualized as problems of decision."* <br> <br> Prof. Ian Jordaan, [Decisions Under Uncertainty](https://doi.org/10.1017/CBO9780511804861).
+
+Statistical decision theory tells us to quantify expected utility (averaging over uncertainty) to rank decision alternatives. We can then identify expected optimal actions, which can be formally described in Equation??
+
+After describing a decision making under uncertainty problem mathematically, it can be solved as an optimisation, where we can benefit from lots of existing software.
+
+## Decision Making under Uncertainty
+
+.tex \$\$ a\^{\*} = \arg \max\_{a \in A} E \big[ u(a, \theta) \big] \\
+
+E \big[ u(a, \theta) \big] = \int\_{\theta} u(a, \theta) d \theta \$\$
+
+## Decision Making under Uncertainty
+
+::: panel-tabset
+### Probability
+
+Uncertainty quantification: benefits of using probability
+
+### Utility
+
+Generally monetary costs
+
+..but a few notes on *utility* - Cost vs. Utility for (a) wholesome engineering company, (b) evil megacorp -
+:::
+
+## Examples
+
+```{julia}
+# For describing probabilistic models
+using Distributions, Turing, Random, LatinHypercubeSampling
+
+# For describing and solving decision problem
+using JuMP, HiGHS, DecisionProgramming, LinearAlgebra
+
+# For working with data
+using CSV, DataFrames, DataFramesMeta, RCall
+
+```
+
+## Building Ventilation
+
+::: panel-tabset
+### Influence Diagram
+
+![Influence diagram for building ventilation problem](Figures/occupancy.png)
+
+### Model
+
+```{julia}
+#| output: false
+s = 3600; venting = [1, 3, 5, 10] ./ s; κ = 0.39 / s; λ = 0.636 / s
+loss_rate = venting .+ κ .+ λ; tₘ = 8 * s; n_step = 100
+
+loss_rate = venting .+ κ .+ λ; tₘ = 8 * 3600; n_step = 100
+
+function Pr_infection(occupancy::Int64, Vol::Float64, loss::Float64, Δt = tₘ / (n_step - 1), infection_rate = 0.02, iᵣ = 5.21 * 10^-4, Cᵣ = 410, Nᵣ = 0.453)
+    C = zeros(n_step); nᵢₙₕ = zeros(n_step); Prᵢ = zeros(n_step); t = zeros(n_step); 
+    N = occupancy * infection_rate
+    for i in 2:(n_step)
+        t[i] = t[i-1] + Δt
+        C[i] = N * Nᵣ / (Vol * loss) + (C[i-1] - N * Nᵣ / (Vol * loss)) * exp(-1 * loss * Δt)
+        nᵢₙₕ[i] = nᵢₙₕ[i-1] + iᵣ * Δt * C[i]
+        Prᵢ[i] = 1 - exp(-1 * nᵢₙₕ[i] / Cᵣ)
+    end
+    return last(Prᵢ)
+end
+
+function pr_inf_pop(pr_inf::Float64, occupants::Int64)
+    return Binomial(occupants, pr_inf) |> x -> pdf.(x, collect(0:occupants))
+end
+
+function draw_lhs(dist, n::Int)
+    samples = randomLHC(n + 2, 1) |>
+        x -> scaleLHC(x, [(0, 1)])[:, 1] |>
+        x -> filter(∉((0, 1)), x) |>
+        x -> sort(x) |>
+        x -> quantile(dist, x)
+    return samples
+end
+
+```
+
+### Prior Uncertainty
+
+```{julia}
+#| output: false
+λpr = 30; n_samples = 1000
+occupancy_model = Poisson(λpr); occupancy_samples = draw_lhs(occupancy_model, n_samples)
+
+vent_options = Dict("Low" => 5, "Standard" => 30, "Well_Ventilated" => 45, "High" => 90)
+vent_states = keys(vent_options) |> x -> collect(x)
+vent_costs = [vent_options[state] for state in vent_states]
+
+infection_states = ["Infected", "Uninfected"]
+
+sickness_costs = Dict("Sick_Day" => 115 * 3)
+```
+
+```{julia}
+#| echo: false
+#| output: false
+@rput(occupancy_samples)
+```
+
+```{r}
+#| echo: false
+
+ggplot(data = tibble(o = occupancy_samples))+
+  geom_histogram(mapping = aes(x = o, y = after_stat(x = density)), 
+                 binwidth = 3, col = "black", alpha = 1/3)+
+  scale_x_continuous(name = "Number of Occupants")+
+  scale_y_continuous(name = "Prior Likelihood")+
+  ggthemes::theme_base(base_family = "Atkinson Hyperlegible", base_size = 12)+
+  theme(plot.background = element_rect(colour = NA),
+        legend.title = element_blank(), legend.position = "top")
+```
+
+### Decision Analysis
+
+```{julia}
+function exp_opt_venting(occupants::Vector{Int64} = occupancy_samples, optimiser = HiGHS.Optimizer)
+
+    occupancy_states = append!(["0"], string.(occupants))
+
+    # Initialise the influence diagram
+    occupancy_decision = InfluenceDiagram()
+
+    # Create structure of influence diagram
+    add_node!(occupancy_decision, DecisionNode("Ventilation", [], vent_states))
+    add_node!(occupancy_decision, ChanceNode("Occupancy", [], occupancy_states))
+    add_node!(occupancy_decision, ValueNode("Cost_Infection", ["Ventilation", "Occupancy"]))
+    add_node!(occupancy_decision, ValueNode("Cost_Ventilation", ["Ventilation"]))
+
+    generate_arcs!(occupancy_decision)
+
+    # Calculate the probability of infection for each ventilation option
+    pr_inf = [Pr_infection.(o, 2000.0, loss_rate) for o in occupants] |>
+        x -> [v[i] for i in 1:4 for v in x] |>
+        x -> [x[1:length(occupants)], 
+              x[length(occupants)+1:2*length(occupants)], 
+              x[2*length(occupants)+1:3*length(occupants)], 
+              x[3*length(occupants)+1:4*length(occupants)]]
+    pr_low = pr_inf[1]; pr_std = pr_inf[2]; pr_well = pr_inf[3]; pr_high = pr_inf[4]
+
+    # Calculate the probability of each possible number of total infections in the building
+    # ...and the associated expected costs due to sickness
+    infection_df = DataFrame(occupants = occupants, 
+                             pr_inf_low = pr_inf_pop.(pr_low, occupants),
+                             pr_inf_std = pr_inf_pop.(pr_std, occupants),
+                             pr_inf_well = pr_inf_pop.(pr_well, occupants),
+                             pr_inf_high = pr_inf_pop.(pr_high, occupants)) |>
+        x -> @rtransform(x, :cost_sick = [sickness_costs["Sick_Day"] * o for o in reverse(:occupants:-1:0)]) |>
+        x -> @rtransform(x, :EC_low = :pr_inf_low .* :cost_sick |> x -> sum(x)) |>
+        x -> @rtransform(x, :EC_std = :pr_inf_std .* :cost_sick |> x -> sum(x)) |>
+        x -> @rtransform(x, :EC_well = :pr_inf_well .* :cost_sick |> x -> sum(x)) |>
+        x -> @rtransform(x, :EC_high = :pr_inf_high .* :cost_sick |> x -> sum(x)) |>
+        x -> @rselect(x, :occupants, :EC_low, :EC_std, :EC_well, :EC_high)
+
+    # Assigning probabilities and utilities to diagram
+    Pr_occ = ProbabilityMatrix(occupancy_decision, "Occupancy")
+    C_inf = UtilityMatrix(occupancy_decision, "Cost_Infection")
+    C_vent = UtilityMatrix(occupancy_decision, "Cost_Ventilation")
+
+    Pr_occ = append!([0.0], repeat([1/length(occupants)], length(occupants)))
+
+    C_inf["Low", :] = append!([0.0], infection_df.EC_low)
+    C_inf["Standard", :] = append!([0.0], infection_df.EC_std)
+    C_inf["Well_Ventilated", :] = append!([0.0], infection_df.EC_well)
+    C_inf["High", :] = append!([0.0], infection_df.EC_high)
+
+    C_vent["Low"] = vent_options["Low"]; C_vent["Standard"] = vent_options["Standard"]
+    C_vent["Well_Ventilated"] = vent_options["Well_Ventilated"]; C_vent["High"] = vent_options["High"]
+
+    add_probabilities!(occupancy_decision, "Occupancy", Pr_occ)
+    add_utilities!(occupancy_decision, "Cost_Infection", C_inf)
+    add_utilities!(occupancy_decision, "Cost_Ventilation", C_vent)
+
+    # generate the full influence diagram
+    generate_diagram!(occupancy_decision)
+
+    # Define and run solver
+    decision_model = JuMP.Model(optimiser); set_silent(decision_model)
+
+    z = DecisionVariables(decision_model, occupancy_decision)
+    x_s = PathCompatibilityVariables(decision_model, occupancy_decision, z)
+
+    Exp_Cost = expected_value(decision_model, occupancy_decision, x_s)
+
+    @objective(decision_model, Min, Exp_Cost)
+    optimize!(decision_model)
+
+    # Process results
+    Z = DecisionStrategy(z)
+    U_dist = UtilityDistribution(occupancy_decision, DecisionStrategy(z))
+
+    exp_opt_decision = DataFrame(u_opt = LinearAlgebra.dot(U_dist.p, U_dist.u),
+                                 a_opt = vent_states[argmax(Z.Z_d[1])])
+
+    return exp_opt_decision
+    
+end
+
+```
+:::
+
+
+
+## Building Ventilation
+
+### Expected Value of Measuring Occupancy
+
+```{julia}
+#| output: false
+prior_df = exp_opt_venting()
+
+measure_df = DataFrame()
+for o in occupancy_samples
+    append!(measure_df, exp_opt_venting([o]))
+end
+
+prior_cost = prior_df.u_opt[1] 
+prepost_cost = mean(measure_df.u_opt)
+
+VoPI = prior_cost - prepost_cost
+```
+
+```{julia}
+#| echo: false
+#| output: false
+@rput(prior_df); @rput(measure_df)
+```
+
+```{r}
+#| echo: false
+#| fig-cap: "Expected Cost and Optimal Action Associated with each Simulation From a Prospective Measurement of Building Occupancy"
+
+measure_df$meas <- occupancy_samples
+
+arrow_df <- tibble(x = prior_df$u_opt,
+                   xend = measure_df$u_opt |> mean(),
+                   y = 4, yend = 4)
+
+ggplot(data = bind_rows(measure_df, tibble(a_opt = "High", u_opt = NA)) |>
+         mutate(a_opt = factor(x = a_opt, levels = c("Low", "Standard", "Well_Ventilated", "High"))),
+                        mapping = aes(x = u_opt, y = a_opt))+
+  geom_jitter(shape = 21, alpha = 1/2, height = 1/3, mapping = aes(fill = meas))+
+  geom_vline(mapping = aes(xintercept = prior_df$u_opt, 
+                           lty = "Expected Cost Without Measuring Occupancy"), alpha = 1/2) +
+  geom_vline(mapping = aes(xintercept = measure_df$u_opt |> mean(), 
+                           lty = "Expected Cost Measuring Occupancy"), alpha = 1/2)+
+  geom_segment(data = arrow_df,
+               mapping = aes(x = x, xend = xend, y = y, yend = yend, col = "EVoPI"), 
+               arrow = arrow(length = unit(0.25, "cm"), ends = "last", type = "closed"))+
+  scale_color_manual(values = c("midnightblue"))+
+  scale_fill_viridis_c()+
+  labs(y = "Expected Optimal Action", fill = "Measured Occupancy", lty = "", col = "")+
+  scale_x_continuous(name = "Expected Cost, $", limits = c(0, 125))+
+  ggthemes::theme_base(base_size = 14, base_family = "Atkinson Hyperlegible")+
+  theme(legend.position = 'top', legend.title = element_text(size = 10), axis.text.y = element_text(angle = 90, hjust = 0.5), 
+        plot.background = element_rect(colour = NA))+
+  guides(linetype = guide_legend(nrow = 2), 
+         fill = guide_colorbar(title.position = 'top', barwidth = 10, barheight = 1/2, order = 3))
+```
+
+## Inspecting for Damage
+
+Opportunity to collect data (perform experiments) *before* making decision
+
+Concept: to what extent, is data expected to facilitate improved risk management?
+
+## Summary
+
+-   Methods are generic - mention other applications - think about the decision problems that are driving your modelling
+-   Relating models to decisions =\> consistent and coherent results
+-   ...also allows for powerful analysis, e.g. VoI
+-   Analogous to prior predictive sampling - no intuition for multivariate distribution of parameters, but there is for outcome space. Here there may be no intuition for whether data is worth paying for, but there is for current state of knowledge and possible outcomes. The expected value of data follows by the logic of statistical decision analysis. Additional benefits include having a documented, quantitative workflow.
+-  Further work: 
+
+## Thank you for your attention!
+
+<span style="font-size: 3em;">
+<i class="fa-brands fa-twitter"></i>
+</span>

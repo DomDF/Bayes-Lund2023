@@ -7,7 +7,9 @@
 <link href="Bayes-Lund2023_presentation_files/libs/quarto-html/tippy.css" rel="stylesheet">
 <link href="Bayes-Lund2023_presentation_files/libs/quarto-html/light-border.css" rel="stylesheet">
 <link href="Bayes-Lund2023_presentation_files/libs/quarto-html/quarto-html.min.css" rel="stylesheet" data-mode="light">
-<link href="Bayes-Lund2023_presentation_files/libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles"><meta charset="utf-8">
+<link href="Bayes-Lund2023_presentation_files/libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="Bayes-Lund2023_presentation_files/libs/quarto-contrib/fontawesome6-0.1.0/all.css" rel="stylesheet">
+<link href="Bayes-Lund2023_presentation_files/libs/quarto-contrib/fontawesome6-0.1.0/latex-fontsize.css" rel="stylesheet"><meta charset="utf-8">
   <meta name="generator" content="quarto-1.3.119">
 
   <meta name="author" content="Domenic Di Francesco, PhD, CEng (MIMechE)">
@@ -391,28 +393,52 @@
 
 <section id="title-slide" class="quarto-title-block center">
   <h1 class="title">Identifying Data Requirements using Bayesian Decision Analysis</h1>
-  <p class="subtitle">Bayes@Lund Conference</p>
+  <p class="subtitle">Bayes@Lund</p>
 
 <div class="quarto-title-authors">
 <div class="quarto-title-author">
 <div class="quarto-title-author-name">
 Domenic Di Francesco, PhD, CEng (MIMechE) 
 </div>
-</div>
+        <p class="quarto-title-affiliation">
+            The Alan Turing Institute <br> CSML Research Group, Civil Engineering, University of Cambridge
+          </p>
+    </div>
 </div>
 
-  <p class="date">1/1/23</p>
+  <p class="date">Monday, January 23, 2023</p>
 </section>
 <section id="uncertainty-and-decisions" class="slide level2">
 <h2>Uncertainty and Decisions</h2>
+<aside class="notes">
+<p>need for decisions is why we are asked to develop models</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
 <div class="cell">
 
+</div>
+<div>
+<ul>
+<li class="fragment"><p><em>“Many if not most statistical analyses are performed for the ultimate goal of decision making.”</em> <br> Andrew Gelman et. al, <a href="https://doi.org/10.1201/b16018">Bayesian Data Analysis</a>. <br></p></li>
+<li class="fragment"><p><em>“Bayesian analysis and decision theory go rather naturally together, partly because of their common goal of utilizing non-experimental sources of information, and partly because of deep theoretical ties.”</em> <br> Prof.&nbsp;James Berger, <a href="https://doi.org/10.1007/978-1-4757-4286-2">Statistical Decision Theory and Bayesian Analysis</a>. <br></p></li>
+<li class="fragment"><p><em>“It is important that all problems of inference be visualized as problems of decision.”</em> <br> Prof.&nbsp;Ian Jordaan, <a href="https://doi.org/10.1017/CBO9780511804861">Decisions Under Uncertainty</a>.<br></p></li>
+<li class="fragment"><p><em>“It (statistics) is seldom really appreciated for what it can be used for, namely as a basis for assessing information and organising the process of acquiring knowledge in pursuit of supporting decision making.”</em> <br> Prof.&nbsp;Michael Faber, <a href="https://doi.org/10.1007/978-94-007-4056-3">Statistics and Probability Theory: In Pursuit of Engineering Decision Support</a>. <br></p></li>
+</ul>
 </div>
 </section>
 <section id="uncertainty-and-decisions-1" class="slide level2">
 <h2>Uncertainty and Decisions</h2>
 <div class="panel-tabset">
-<ul id="tabset-1" class="panel-tabset-tabby"><li><a data-tabby-default="" href="#tabset-1-1">Decision-event trees</a></li><li><a href="#tabset-1-2">Influence diagrams</a></li></ul>
+<ul id="tabset-1" class="panel-tabset-tabby"><li><a data-tabby-default="" href="#tabset-1-1">Decision-event trees</a></li><li><a href="#tabset-1-2">Influence diagrams</a></li><li><a href="#tabset-1-3">Value of Information</a></li></ul>
 <div class="tab-content">
 <div id="tabset-1-1">
 <div class="quarto-figure quarto-figure-center">
@@ -429,61 +455,106 @@ Domenic Di Francesco, PhD, CEng (MIMechE)
 <p></p><figcaption>Example influence diagram</figcaption><p></p>
 </figure>
 </div>
+<p>Select action <span class="math inline">\(a^{*}\)</span> associated with the highest expected utility:</p>
+<span class="math display">\[\begin{equation}
+a^{*} = \arg \max_{a \in A} \mathop{\mathbb{E}}_{\theta \sim \pi(\theta)} \big[ u(a, \theta) \big]
+\end{equation}\]</span>
 </div>
+<div id="tabset-1-3">
+<aside class="notes">
+<ul>
+<li>multi-stage, or preposterior decision making</li>
+<li>…we don’t yet have the data</li>
+</ul>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+<div class="quarto-figure quarto-figure-center">
+<figure>
+<p><img data-src="Figures/VoI.png"></p>
+<p></p><figcaption>Example influence diagram</figcaption><p></p>
+</figure>
 </div>
+<div style="text-align: center">
+<p><em>How</em> and <em>to what extent</em> will this data facilitate improved decision making?</p>
+<span class="math display">\[\begin{equation}
+VoI(e_{i}) = \mathop{\mathbb{E}}_{\theta \sim \pi(\theta), \\z \sim f(z \mid \theta)} \big[ u(e_{i}, z, a^{*}, \pi(\theta \mid z) \big] - \mathop{\mathbb{E}}_{\theta \sim \pi(\theta)} \big[ u( a^{*}, \pi(\theta)) \big]
+\end{equation}\]</span>
 </div>
-</section>
-<section id="uncertainty-and-decisions-2" class="slide level2">
-<h2>Uncertainty and Decisions</h2>
-<!-- ::: {.incremental} -->
-<!-- ::: -->
-<p><em>“Bayesian analysis and decision theory go rather naturally together, partly because of their common goal of utilizing non-experimental sources of information, and partly because of deep theoretical ties.”</em> <br> <br> Prof.&nbsp;James Berger, <a href="https://doi.org/10.1007/978-1-4757-4286-2">Statistical Decision Theory and Bayesian Analysis</a>.</p>
-<p><em>“It is important that all problems of inference be visualized as problems of decision.”</em> <br> <br> Prof.&nbsp;Ian Jordaan, <a href="https://doi.org/10.1017/CBO9780511804861">Decisions Under Uncertainty</a>.</p>
-<p>Statistical decision theory tells us to quantify expected utility (averaging over uncertainty) to rank decision alternatives. We can then identify expected optimal actions, which can be formally described in Equation??</p>
-<p>After describing a decision making under uncertainty problem mathematically, it can be solved as an optimisation, where we can benefit from lots of existing software.</p>
-</section>
-<section id="decision-making-under-uncertainty" class="slide level2">
-<h2>Decision Making under Uncertainty</h2>
-<p>.tex $$ a^{*} = _{a A} E \</p>
-<p>E = _{} u(a, ) d $$</p>
-</section>
-<section id="decision-making-under-uncertainty-1" class="slide level2">
-<h2>Decision Making under Uncertainty</h2>
-<div class="panel-tabset">
-<ul id="tabset-2" class="panel-tabset-tabby"><li><a data-tabby-default="" href="#tabset-2-1">Probability</a></li><li><a href="#tabset-2-2">Utility</a></li></ul>
-<div class="tab-content">
-<div id="tabset-2-1">
-<p>Uncertainty quantification: benefits of using probability</p>
-</div>
-<div id="tabset-2-2">
-<p>Generally monetary costs</p>
-<p>..but a few notes on <em>utility</em> - Cost vs.&nbsp;Utility for (a) wholesome engineering company, (b) evil megacorp -</p>
 </div>
 </div>
 </div>
 </section>
 <section id="examples" class="slide level2">
 <h2>Examples</h2>
+<aside class="notes">
+<p>influence diagram software</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
 <div class="cell">
 <details>
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource julia number-lines code-with-copy"><code class="sourceCode julia"><span id="cb1-1"><a href="#cb1-1"></a><span class="co"># For describing probabilistic models</span></span>
-<span id="cb1-2"><a href="#cb1-2"></a><span class="im">using</span> <span class="bu">Distributions</span>, <span class="bu">Turing</span>, <span class="bu">Random</span>, <span class="bu">LatinHypercubeSampling</span></span>
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource julia number-lines code-with-copy"><code class="sourceCode julia"><span id="cb1-1"><a href="#cb1-1"></a><span class="co"># For working with data</span></span>
+<span id="cb1-2"><a href="#cb1-2"></a><span class="im">using</span> <span class="bu">CSV</span>, <span class="bu">DataFrames</span>, <span class="bu">DataFramesMeta</span>, <span class="bu">RCall</span></span>
 <span id="cb1-3"><a href="#cb1-3"></a></span>
-<span id="cb1-4"><a href="#cb1-4"></a><span class="co"># For describing and solving decision problem</span></span>
-<span id="cb1-5"><a href="#cb1-5"></a><span class="im">using</span> <span class="bu">JuMP</span>, <span class="bu">HiGHS</span>, <span class="bu">DecisionProgramming</span>, <span class="bu">LinearAlgebra</span></span>
+<span id="cb1-4"><a href="#cb1-4"></a><span class="co"># For describing probabilistic models</span></span>
+<span id="cb1-5"><a href="#cb1-5"></a><span class="im">using</span> <span class="bu">Distributions</span>, <span class="bu">Random</span>, <span class="bu">LatinHypercubeSampling</span>, <span class="bu">StanSample</span>, <span class="bu">MCMCChains</span></span>
 <span id="cb1-6"><a href="#cb1-6"></a></span>
-<span id="cb1-7"><a href="#cb1-7"></a><span class="co"># For working with data</span></span>
-<span id="cb1-8"><a href="#cb1-8"></a><span class="im">using</span> <span class="bu">CSV</span>, <span class="bu">DataFrames</span>, <span class="bu">DataFramesMeta</span>, <span class="bu">RCall</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb1-7"><a href="#cb1-7"></a><span class="co"># For describing and solving decision problem</span></span>
+<span id="cb1-8"><a href="#cb1-8"></a><span class="im">using</span> <span class="bu">JuMP</span>, <span class="bu">HiGHS</span>, <span class="bu">DecisionProgramming</span>, <span class="bu">LinearAlgebra</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
+</div>
+<div class="cell">
+
 </div>
 </section>
 <section id="building-ventilation" class="slide level2">
 <h2>Building Ventilation</h2>
+<aside class="notes">
+<p>airborne-cam model</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
 <div class="panel-tabset">
-<ul id="tabset-3" class="panel-tabset-tabby"><li><a data-tabby-default="" href="#tabset-3-1">Influence Diagram</a></li><li><a href="#tabset-3-2">Model</a></li><li><a href="#tabset-3-3">Prior Uncertainty</a></li><li><a href="#tabset-3-4">Decision Analysis</a></li></ul>
+<ul id="tabset-2" class="panel-tabset-tabby"><li><a data-tabby-default="" href="#tabset-2-1">Problem</a></li><li><a href="#tabset-2-2">Influence diagram</a></li><li><a href="#tabset-2-3">Model</a></li><li><a href="#tabset-2-4">Prior uncertainty</a></li><li><a href="#tabset-2-5">Decision analysis</a></li></ul>
 <div class="tab-content">
-<div id="tabset-3-1">
+<div id="tabset-2-1">
+<p>Specify the ventilation setting for an office building:</p>
+<ul>
+<li>Low</li>
+<li>Standard</li>
+<li>Well Ventilated</li>
+<li>High</li>
+</ul>
+<p>Higher ventilation rates decrease the risk of infection from airborne disease, but cost more to run.</p>
+<p><a href="https://doi.org/10.1098/rspa.2020.0584">Link to paper</a></p>
+</div>
+<div id="tabset-2-2">
 <div class="quarto-figure quarto-figure-center">
 <figure>
 <p><img data-src="Figures/occupancy.png"></p>
@@ -491,7 +562,7 @@ Domenic Di Francesco, PhD, CEng (MIMechE)
 </figure>
 </div>
 </div>
-<div id="tabset-3-2">
+<div id="tabset-2-3">
 <div class="cell">
 <details>
 <summary>Code</summary>
@@ -527,7 +598,7 @@ Domenic Di Francesco, PhD, CEng (MIMechE)
 </details>
 </div>
 </div>
-<div id="tabset-3-3">
+<div id="tabset-2-4">
 <div class="cell">
 <details>
 <summary>Code</summary>
@@ -548,11 +619,11 @@ Domenic Di Francesco, PhD, CEng (MIMechE)
 </div>
 <div class="cell">
 <div class="cell-output-display">
-<p><img data-src="Bayes-Lund2023_presentation_files/figure-revealjs/unnamed-chunk-6-1.png" width="960"></p>
+<p><img data-src="Bayes-Lund2023_presentation_files/figure-revealjs/unnamed-chunk-7-1.png" width="960"></p>
 </div>
 </div>
 </div>
-<div id="tabset-3-4">
+<div id="tabset-2-5">
 <div class="cell">
 <details>
 <summary>Code</summary>
@@ -641,6 +712,18 @@ Domenic Di Francesco, PhD, CEng (MIMechE)
 <div class="cell-output cell-output-stdout">
 <pre><code>exp_opt_venting (generic function with 3 methods)</code></pre>
 </div>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode numberSource julia number-lines code-with-copy"><code class="sourceCode julia"><span id="cb6-1"><a href="#cb6-1"></a></span>
+<span id="cb6-2"><a href="#cb6-2"></a>prior_ventilation_decision <span class="op">=</span> <span class="fu">exp_opt_venting</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>1×2 DataFrame
+ Row │ u_opt    a_opt
+     │ Float64  String
+─────┼───────────────────
+   1 │ 76.1801  Standard</code></pre>
+</div>
 </div>
 </div>
 </div>
@@ -648,46 +731,318 @@ Domenic Di Francesco, PhD, CEng (MIMechE)
 </section>
 <section id="building-ventilation-1" class="slide level2">
 <h2>Building Ventilation</h2>
-<h3 id="expected-value-of-measuring-occupancy">Expected Value of Measuring Occupancy</h3>
+<aside class="notes">
+<ul>
+<li>how much should we be willing to pay to measure occupancy?</li>
+<li>scales with time…</li>
+<li>VoPI</li>
+</ul>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+<h4 id="expected-value-of-measuring-occupancy">Expected value of measuring occupancy</h4>
 <div class="cell">
 <details>
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode numberSource julia number-lines code-with-copy"><code class="sourceCode julia"><span id="cb6-1"><a href="#cb6-1"></a>prior_df <span class="op">=</span> <span class="fu">exp_opt_venting</span>()</span>
-<span id="cb6-2"><a href="#cb6-2"></a></span>
-<span id="cb6-3"><a href="#cb6-3"></a>measure_df <span class="op">=</span> <span class="fu">DataFrame</span>()</span>
-<span id="cb6-4"><a href="#cb6-4"></a><span class="cf">for</span> o <span class="kw">in</span> occupancy_samples</span>
-<span id="cb6-5"><a href="#cb6-5"></a>    <span class="fu">append!</span>(measure_df, <span class="fu">exp_opt_venting</span>([o]))</span>
-<span id="cb6-6"><a href="#cb6-6"></a><span class="cf">end</span></span>
-<span id="cb6-7"><a href="#cb6-7"></a></span>
-<span id="cb6-8"><a href="#cb6-8"></a>prior_cost <span class="op">=</span> prior_df.u_opt[<span class="fl">1</span>] </span>
-<span id="cb6-9"><a href="#cb6-9"></a>prepost_cost <span class="op">=</span> <span class="fu">mean</span>(measure_df.u_opt)</span>
-<span id="cb6-10"><a href="#cb6-10"></a></span>
-<span id="cb6-11"><a href="#cb6-11"></a>VoPI <span class="op">=</span> prior_cost <span class="op">-</span> prepost_cost</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode numberSource julia number-lines code-with-copy"><code class="sourceCode julia"><span id="cb8-1"><a href="#cb8-1"></a>measure_occupancy_df <span class="op">=</span> <span class="fu">DataFrame</span>()</span>
+<span id="cb8-2"><a href="#cb8-2"></a><span class="cf">for</span> o <span class="kw">in</span> occupancy_samples</span>
+<span id="cb8-3"><a href="#cb8-3"></a>    <span class="fu">append!</span>(measure_occupancy_df, <span class="fu">exp_opt_venting</span>([o]))</span>
+<span id="cb8-4"><a href="#cb8-4"></a><span class="cf">end</span></span>
+<span id="cb8-5"><a href="#cb8-5"></a></span>
+<span id="cb8-6"><a href="#cb8-6"></a>prior_cost <span class="op">=</span> prior_ventilation_decision.u_opt[<span class="fl">1</span>] </span>
+<span id="cb8-7"><a href="#cb8-7"></a>prepost_cost <span class="op">=</span> <span class="fu">mean</span>(measure_occupancy_df.u_opt)</span>
+<span id="cb8-8"><a href="#cb8-8"></a></span>
+<span id="cb8-9"><a href="#cb8-9"></a>VoPI <span class="op">=</span> prior_cost <span class="op">-</span> prepost_cost</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
 <div class="cell">
 
 </div>
 
-<img data-src="Bayes-Lund2023_presentation_files/figure-revealjs/unnamed-chunk-10-1.png" width="960" class="r-stretch quarto-figure-center"><p class="caption">Expected Cost and Optimal Action Associated with each Simulation From a Prospective Measurement of Building Occupancy</p></section>
-<section id="inspecting-for-damage" class="slide level2">
-<h2>Inspecting for Damage</h2>
-<p>Opportunity to collect data (perform experiments) <em>before</em> making decision</p>
-<p>Concept: to what extent, is data expected to facilitate improved risk management?</p>
-</section>
-<section id="summary" class="slide level2">
-<h2>Summary</h2>
+<img data-src="Bayes-Lund2023_presentation_files/figure-revealjs/unnamed-chunk-11-1.png" width="960" class="r-stretch quarto-figure-center"><p class="caption">Expected cost and optimal action associated with each simulation from a prospective measurement of building occupancy</p></section>
+<section id="inspecting-for-corrosion" class="slide level2">
+<h2>Inspecting for Corrosion</h2>
+<aside class="notes">
 <ul>
-<li>Methods are generic - mention other applications - think about the decision problems that are driving your modelling</li>
-<li>Relating models to decisions =&gt; consistent and coherent results</li>
-<li>…also allows for powerful analysis, e.g.&nbsp;VoI</li>
-<li>Analogous to prior predictive sampling - no intuition for multivariate distribution of parameters, but there is for outcome space. Here there may be no intuition for whether data is worth paying for, but there is for current state of knowledge and possible outcomes. The expected value of data follows by the logic of statistical decision analysis. Additional benefits include having a documented, quantitative workflow.</li>
-<li>Further work:</li>
+<li>importance of prior</li>
+<li>imperfect information =&gt; Bayesian updating</li>
 </ul>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+<div class="panel-tabset">
+<ul id="tabset-3" class="panel-tabset-tabby"><li><a data-tabby-default="" href="#tabset-3-1">Problem</a></li><li><a href="#tabset-3-2">Influence diagram</a></li><li><a href="#tabset-3-3">Model</a></li><li><a href="#tabset-3-4">Prior uncertainty</a></li></ul>
+<div class="tab-content">
+<div id="tabset-3-1">
+<p>Identify a repair plan for <span class="math inline">\(10\)</span> locations of corrosion damage:</p>
+<span class="math display">\[\begin{equation}
+CGR = \dfrac{d_{i2} - d_{i1}}{T_{i2} - T_{i1}}
+\end{equation}\]</span>
+<ul>
+<li><p><span class="math inline">\(2\)</span> inspections have been completed</p></li>
+<li><p>Inspection <span class="math inline">\(2\)</span> was incomplete</p></li>
+<li><p>Should the inspection team return to location <span class="math inline">\(4\)</span>?</p></li>
+</ul>
+<p><a href="https://doi.org/10.1017/dce.2021.18">Link to paper</a></p>
+</div>
+<div id="tabset-3-2">
+<div class="quarto-figure quarto-figure-center">
+<figure>
+<p><img data-src="Figures/corrosion.png"></p>
+<p></p><figcaption>Influnce diagram for inspecting for corrosion</figcaption><p></p>
+</figure>
+</div>
+</div>
+<div id="tabset-3-3">
+<div class="cell">
+
+</div>
+<div class="sourceCode" id="cb9"><pre class="sourceCode numberSource stan number-lines code-with-copy"><code class="sourceCode stan"><span id="cb9-1"><a href="#cb9-1"></a><span class="kw">functions</span>{</span>
+<span id="cb9-2"><a href="#cb9-2"></a>  <span class="dt">real</span> log_norm_sigma(<span class="dt">real</span> norm_mu, <span class="dt">real</span> norm_sigma){ </span>
+<span id="cb9-3"><a href="#cb9-3"></a>    <span class="cf">return</span> log(<span class="dv">1</span> + (norm_sigma^<span class="dv">2</span> / norm_mu^<span class="dv">2</span>)); </span>
+<span id="cb9-4"><a href="#cb9-4"></a>  }</span>
+<span id="cb9-5"><a href="#cb9-5"></a>  </span>
+<span id="cb9-6"><a href="#cb9-6"></a>  <span class="dt">real</span> log_norm_mu(<span class="dt">real</span> norm_mu, <span class="dt">real</span> norm_sigma){</span>
+<span id="cb9-7"><a href="#cb9-7"></a>    <span class="cf">return</span> log(norm_mu) - <span class="fl">0.5</span> * log_norm_sigma(norm_mu, norm_sigma)^<span class="dv">2</span>;</span>
+<span id="cb9-8"><a href="#cb9-8"></a>  }</span>
+<span id="cb9-9"><a href="#cb9-9"></a>}</span>
+<span id="cb9-10"><a href="#cb9-10"></a></span>
+<span id="cb9-11"><a href="#cb9-11"></a><span class="kw">data</span> {</span>
+<span id="cb9-12"><a href="#cb9-12"></a>  <span class="dt">int</span> &lt;<span class="kw">lower</span> = <span class="dv">1</span>&gt; N; <span class="co">// Number of data points</span></span>
+<span id="cb9-13"><a href="#cb9-13"></a>  <span class="dt">int</span> &lt;<span class="kw">lower</span> = <span class="dv">1</span>&gt; n_A; <span class="co">// Number of anomalies</span></span>
+<span id="cb9-14"><a href="#cb9-14"></a>  <span class="dt">int</span> &lt;<span class="kw">lower</span> = <span class="dv">0</span>&gt; n_M; <span class="co">// Number of anomalies missed</span></span>
+<span id="cb9-15"><a href="#cb9-15"></a></span>
+<span id="cb9-16"><a href="#cb9-16"></a>  <span class="dt">int</span> &lt;<span class="kw">lower</span> = <span class="dv">1</span>&gt; ID [N]; <span class="co">// Defect identifier</span></span>
+<span id="cb9-17"><a href="#cb9-17"></a></span>
+<span id="cb9-18"><a href="#cb9-18"></a>  <span class="dt">vector</span> [n_A] depth_i1; <span class="co">// Measured corrosion depth</span></span>
+<span id="cb9-19"><a href="#cb9-19"></a>  <span class="dt">vector</span> [n_A] depth_i2; <span class="co">// Measured corrosion depth</span></span>
+<span id="cb9-20"><a href="#cb9-20"></a>  <span class="dt">vector</span> &lt;<span class="kw">lower</span> = <span class="dv">0</span>&gt; [n_A] error_i1; <span class="co">// Measurement error parameter</span></span>
+<span id="cb9-21"><a href="#cb9-21"></a>  <span class="dt">vector</span> &lt;<span class="kw">lower</span> = <span class="dv">0</span>&gt; [n_A] error_i2; <span class="co">// Measurement error parameter</span></span>
+<span id="cb9-22"><a href="#cb9-22"></a></span>
+<span id="cb9-23"><a href="#cb9-23"></a>  <span class="dt">real</span> d_years; <span class="co">// Time of measurement</span></span>
+<span id="cb9-24"><a href="#cb9-24"></a>  </span>
+<span id="cb9-25"><a href="#cb9-25"></a>  <span class="dt">real</span> mu_mu_beta; <span class="co">// Prior corrosion growth rate parameter</span></span>
+<span id="cb9-26"><a href="#cb9-26"></a>  <span class="dt">real</span> &lt;<span class="kw">lower</span> = <span class="dv">0</span>&gt; sigma_mu_beta; <span class="co">// Prior corrosion growth rate parameter</span></span>
+<span id="cb9-27"><a href="#cb9-27"></a>  <span class="dt">real</span> &lt;<span class="kw">lower</span> = <span class="dv">0</span>&gt; rate_sigma_beta; <span class="co">// Prior corrosion growth rate parameter</span></span>
+<span id="cb9-28"><a href="#cb9-28"></a>  </span>
+<span id="cb9-29"><a href="#cb9-29"></a>  <span class="dt">real</span> mu_depth_imp;  <span class="co">// Prior on missing data</span></span>
+<span id="cb9-30"><a href="#cb9-30"></a>  <span class="dt">real</span> &lt;<span class="kw">lower</span> = <span class="dv">0</span>&gt; sigma_depth_imp;  <span class="co">// Prior on missing data</span></span>
+<span id="cb9-31"><a href="#cb9-31"></a>}</span>
+<span id="cb9-32"><a href="#cb9-32"></a></span>
+<span id="cb9-33"><a href="#cb9-33"></a><span class="kw">parameters</span> {</span>
+<span id="cb9-34"><a href="#cb9-34"></a>  <span class="dt">real</span> mu_beta;</span>
+<span id="cb9-35"><a href="#cb9-35"></a>  <span class="dt">real</span> &lt;<span class="kw">lower</span> = <span class="dv">0</span>&gt; sigma_beta;</span>
+<span id="cb9-36"><a href="#cb9-36"></a>  </span>
+<span id="cb9-37"><a href="#cb9-37"></a>  <span class="dt">vector</span> &lt;<span class="kw">lower</span> = <span class="dv">0</span>&gt; [n_A] depth_true_i1;</span>
+<span id="cb9-38"><a href="#cb9-38"></a>  <span class="dt">vector</span> &lt;<span class="kw">lower</span> = <span class="dv">0</span>&gt; [n_A] delta_depth;</span>
+<span id="cb9-39"><a href="#cb9-39"></a>}</span>
+<span id="cb9-40"><a href="#cb9-40"></a></span>
+<span id="cb9-41"><a href="#cb9-41"></a><span class="kw">transformed parameters</span> {</span>
+<span id="cb9-42"><a href="#cb9-42"></a>  <span class="dt">vector</span> [n_A] depth_true_i2 = depth_true_i1 + delta_depth;</span>
+<span id="cb9-43"><a href="#cb9-43"></a>  <span class="dt">vector</span> [n_A] growth; <span class="co">// Growth rate depth of corrosion</span></span>
+<span id="cb9-44"><a href="#cb9-44"></a>  </span>
+<span id="cb9-45"><a href="#cb9-45"></a>  <span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span>:n_A){  </span>
+<span id="cb9-46"><a href="#cb9-46"></a>    growth[i] = (depth_true_i2[i] - depth_true_i1[i]) / (d_years);</span>
+<span id="cb9-47"><a href="#cb9-47"></a>  }</span>
+<span id="cb9-48"><a href="#cb9-48"></a>}</span>
+<span id="cb9-49"><a href="#cb9-49"></a></span>
+<span id="cb9-50"><a href="#cb9-50"></a><span class="kw">model</span> {</span>
+<span id="cb9-51"><a href="#cb9-51"></a>  <span class="co">// Model</span></span>
+<span id="cb9-52"><a href="#cb9-52"></a>  <span class="cf">for</span> (n <span class="cf">in</span> <span class="dv">1</span>:n_A) {</span>
+<span id="cb9-53"><a href="#cb9-53"></a>    <span class="cf">if</span> (ex_1[n] == <span class="dv">0</span>){</span>
+<span id="cb9-54"><a href="#cb9-54"></a>      depth_i1[n] ~ normal(depth_true_i1[n], error_i1[n]);</span>
+<span id="cb9-55"><a href="#cb9-55"></a>    }</span>
+<span id="cb9-56"><a href="#cb9-56"></a>    </span>
+<span id="cb9-57"><a href="#cb9-57"></a>    <span class="cf">if</span> (ex_1[n] == <span class="dv">1</span>) {</span>
+<span id="cb9-58"><a href="#cb9-58"></a>      depth_true_i1[n] ~ lognormal(mu_depth_imp, sigma_depth_imp);</span>
+<span id="cb9-59"><a href="#cb9-59"></a>    }</span>
+<span id="cb9-60"><a href="#cb9-60"></a>    </span>
+<span id="cb9-61"><a href="#cb9-61"></a>    <span class="cf">if</span> (ex_2[n] == <span class="dv">0</span>){</span>
+<span id="cb9-62"><a href="#cb9-62"></a>      depth_i2[n] ~ normal(depth_true_i2[n], error_i2[n]);</span>
+<span id="cb9-63"><a href="#cb9-63"></a>    }</span>
+<span id="cb9-64"><a href="#cb9-64"></a>    </span>
+<span id="cb9-65"><a href="#cb9-65"></a>    <span class="cf">if</span> (ex_2[n] == <span class="dv">1</span>) {</span>
+<span id="cb9-66"><a href="#cb9-66"></a>      depth_true_i2[n] ~ lognormal(mu_depth_imp, sigma_depth_imp);</span>
+<span id="cb9-67"><a href="#cb9-67"></a>    }</span>
+<span id="cb9-68"><a href="#cb9-68"></a>  }</span>
+<span id="cb9-69"><a href="#cb9-69"></a>  growth ~ lognormal(mu_beta, sigma_beta);</span>
+<span id="cb9-70"><a href="#cb9-70"></a></span>
+<span id="cb9-71"><a href="#cb9-71"></a>  <span class="co">// Priors</span></span>
+<span id="cb9-72"><a href="#cb9-72"></a>  <span class="kw">target +=</span> normal_lpdf(mu_beta | mu_mu_beta, sigma_mu_beta);</span>
+<span id="cb9-73"><a href="#cb9-73"></a>  <span class="kw">target +=</span> exponential_lpdf(sigma_beta | rate_sigma_beta);</span>
+<span id="cb9-74"><a href="#cb9-74"></a>}</span>
+<span id="cb9-75"><a href="#cb9-75"></a></span>
+<span id="cb9-76"><a href="#cb9-76"></a><span class="kw">generated quantities</span> {</span>
+<span id="cb9-77"><a href="#cb9-77"></a>   <span class="dt">real</span> CGR_pp = lognormal_rng(mu_beta, sigma_beta);</span>
+<span id="cb9-78"><a href="#cb9-78"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div id="tabset-3-4">
+<div class="cell">
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure>
+<p><img data-src="Bayes-Lund2023_presentation_files/figure-revealjs/unnamed-chunk-13-1.png" width="960"></p>
+<p></p><figcaption>Estimated extent of corrosion damage for first 4 locations</figcaption><p></p>
+</figure>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section id="inspecting-for-corrosion-1" class="slide level2">
+<h2>Inspecting for Corrosion</h2>
+<h4 id="expected-value-of-completing-inspection">Expected value of completing inspection</h4>
+<div class="panel-tabset">
+<ul id="tabset-4" class="panel-tabset-tabby"><li><a data-tabby-default="" href="#tabset-4-1">Prior decision analysis</a></li><li><a href="#tabset-4-2">Preposterior decision analysis</a></li></ul>
+<div class="tab-content">
+<div id="tabset-4-1">
+<div class="cell">
+<div class="cell-output-display">
+<table>
+<thead>
+<tr class="header">
+<th style="text-align: right;">Anomaly ID</th>
+<th style="text-align: right;">Pr(fail)</th>
+<th style="text-align: right;">Cost</th>
+<th style="text-align: left;">Action, a*</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">0.000</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: left;">No action</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">0.000</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: left;">No action</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">3</td>
+<td style="text-align: right;">1.000</td>
+<td style="text-align: right;">10000</td>
+<td style="text-align: left;">Repair</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">4</td>
+<td style="text-align: right;">0.042</td>
+<td style="text-align: right;">4200</td>
+<td style="text-align: left;">No action</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">5</td>
+<td style="text-align: right;">1.000</td>
+<td style="text-align: right;">10000</td>
+<td style="text-align: left;">Repair</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">6</td>
+<td style="text-align: right;">0.000</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: left;">No action</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">7</td>
+<td style="text-align: right;">0.000</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: left;">No action</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">8</td>
+<td style="text-align: right;">0.056</td>
+<td style="text-align: right;">5600</td>
+<td style="text-align: left;">No action</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">9</td>
+<td style="text-align: right;">0.001</td>
+<td style="text-align: right;">100</td>
+<td style="text-align: left;">No action</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">10</td>
+<td style="text-align: right;">0.034</td>
+<td style="text-align: right;">3400</td>
+<td style="text-align: left;">No action</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+<div id="tabset-4-2">
+<div class="cell">
+<div class="cell-output-display">
+<p><img data-src="Bayes-Lund2023_presentation_files/figure-revealjs/unnamed-chunk-15-1.png" width="960"></p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section id="some-concluding-thoughts" class="slide level2">
+<h2>Some concluding thoughts</h2>
+<ul>
+<li>Explictly relate Bayesian models to underlying decisions:
+<ul>
+<li>Consistent and coherent results on an intereptable scale</li>
+<li>Quantify expected value of collecting data</li>
+</ul></li>
+<li>Challenges:
+<ul>
+<li>Defining problem, e.g.&nbsp;identifying sources of value.</li>
+<li>Computation/combinatorics…</li>
+</ul></li>
+<li>Further work…</li>
+</ul>
+<aside class="notes">
+<p>analogy to priot predictive sampling</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
 </section>
 <section id="thank-you-for-your-attention" class="slide level2">
 <h2>Thank you for your attention!</h2>
-<p>&lt;span style=“font-size: 3em;&gt; <i class="fa-brands fa-twitter"></i> </p>
+<div style="text-align: center">
+<p><br></p>
+<p><i class="fa-solid fa-envelope fa-2x" aria-label="envelope"></i></p>
+<p><a href="ddifrancesco@turing.ac.uk">ddifrancesco@turing.ac.uk</a></p>
+<p><br></p>
+<p><i class="fa-brands fa-twitter fa-2x" aria-label="twitter"></i></p>
+<p><a href="https://twitter.com/Domenic_DF"><span class="citation" data-cites="DomenicDF">@DomenicDF</span></a></p>
+<p><br></p>
+<p><i class="fa-brands fa-github fa-2x" aria-label="github"></i></p>
+<p><a href="https://github.com/DomDF"><span class="citation" data-cites="DomDF">@DomDF</span></a></p>
+</div>
 <div class="footer footer-default">
 
 </div>

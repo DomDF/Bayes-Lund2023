@@ -1,0 +1,61 @@
+```{mermaid}
+
+flowchart TD
+  d1[Decision, A] -- a1 --> o1((Uncertain \nParameter, \u0398))
+  d1[Decision, A] -- a2 --> o2((Uncertain \nParameter, \u0398))
+  
+  o1 --Pr \u0398 = \u03b81 --> c1a{Utility, \n\u0398 = \u03b81, d = a1}
+  o1 --Pr \u0398 = \u03b82 --> c1b{Utility, \n\u0398 = \u03b82, d = \u03b81}
+  o2 --Pr \u0398 = \u03b81 --> c2a{Utility, \n\u0398 = \u03b81, d = a2}
+  o2 --Pr \u0398 = \u03b82 --> c2b{Utility, \n\u0398 = \u03b82, d = a2}
+
+```
+
+```{mermaid}
+flowchart LR
+  d1[Decision, \nA] --> o1((Uncertain \nParameter, \n\u03b8))
+  
+  o1 --> c1{Utility, \nU}
+  d1 --> c1
+
+```
+
+```{mermaid}
+flowchart LR
+  d2[Data\n Collection, E] --> o1
+  d1[Decision, \nA] --> o1((Uncertain \nParameter, \n\u03b8))
+  
+  o1 --> c1{Utility, \nU}
+  d1 --> c1
+
+```
+
+```{mermaid}
+flowchart LR
+  
+  d2[Ventilation \nSetting] --> o2((Infection \nRate)) 
+
+  d2 --> c3{Ventilation \nCost}
+
+  o2 --> c2{Infection \nCost}
+  
+  d1[Measure \nOccupancy] --> o1((Occupancy))
+  d1 --> c1{Monitoring \nCost}
+
+  o1 --> o2
+
+```
+
+```{mermaid}
+flowchart TD
+
+  d1[Inspect \nAnomaly 4] --> c1{Inspection \nCost}
+  
+  d1 --> o1((Structural \nReliability))
+  d2[Repair \nPlan] --> o1
+  
+  d2 --> c2{Repair \nCost}
+
+  o1 --> c3{Failure \nCost}
+
+```

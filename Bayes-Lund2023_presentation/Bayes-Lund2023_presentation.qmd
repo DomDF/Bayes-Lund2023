@@ -23,10 +23,6 @@ format:
 
 ## Uncertainty and Decisions
 
-:::{.notes}
-need for decisions is why we are asked to develop models
-:::
-
 ```{r}
 #| echo: false
 library(tidyverse); setwd("~/Github/Bayes-Lund2023/Bayes-Lund2023_presentation")
@@ -68,11 +64,6 @@ a^{*} = \arg \max_{a \in A} \mathop{\mathbb{E}}_{\theta \sim \pi(\theta)} \big[ 
 
 ### Value of Information
 
-:::{.notes}
- - multi-stage, or preposterior decision making
- - ...we don't yet have the data
-:::
-
 ![Example influence diagram](Figures/VoI.png)
 
 ::: {style="text-align: center"}
@@ -90,10 +81,6 @@ VoI(e_{i}) = \mathop{\mathbb{E}}_{\theta \sim \pi(\theta), \\z \sim f(z \mid \th
 :::
 
 ## Examples
-
-:::{.notes}
-influence diagram software
-:::
 
 ```{julia}
 # For working with data
@@ -116,10 +103,6 @@ set_cmdstan_home!("/Users/ddifrancesco/.cmdstan/cmdstan-2.30.1"); CMDSTAN_HOME
 ```
 
 ## Building Ventilation
-
-:::{.notes}
-airborne-cam model
-:::
 
 ::: panel-tabset
 
@@ -302,12 +285,6 @@ prior_ventilation_decision = exp_opt_venting()
 
 ## Building Ventilation
 
-:::{.notes}
- - how much should we be willing to pay to measure occupancy?
- - scales with time...
- - VoPI
-:::
-
 #### Expected value of measuring occupancy
 
 ```{julia}
@@ -365,11 +342,6 @@ ggplot(data = bind_rows(measure_occupancy_df, tibble(a_opt = "High", u_opt = NA)
 ```
 
 ## Inspecting for Corrosion
-
-:::{.notes}
- - importance of prior
- - imperfect information => Bayesian updating
-:::
 
 ::: {.panel-tabset}
 
@@ -621,10 +593,6 @@ ggplot(data = VoInsp) +
     - Computation/combinatorics...
 
 - Further work...
-
-:::{.notes}
-analogy to priot predictive sampling
-:::
 
 ## Thank you for your attention!
 
